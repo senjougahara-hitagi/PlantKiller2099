@@ -2,6 +2,9 @@ package plantkiller.wayne.com.plantskiller2099;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -11,9 +14,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -23,7 +27,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -32,21 +35,33 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class HUSTActivity extends FragmentActivity
     implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient
     .OnConnectionFailedListener, LocationListener, GoogleMap.OnMarkerClickListener,
-    GoogleMap.OnMapClickListener {
+    GoogleMap.OnMapClickListener, View.OnClickListener, FloatingActionMenu.OnMenuToggleListener {
     private GoogleMap mMap;
+    private Marker myMarker;
+    Marker mCurrLocationMarker;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
-    Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
-
     RelativeLayout mInfor;
-    private Marker myMarker;
+    RelativeLayout mMainLayout;
+    FloatingActionButton mBtnStart;
+    FloatingActionButton mBtnLocation;
+    private FloatingActionMenu fam;
+    private FloatingActionButton fabEdit, fabDelete, fabAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hust);
         mInfor = (RelativeLayout) findViewById(R.id.treeInfor);
+        mMainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+        mBtnStart = (FloatingActionButton) findViewById(R.id.btn_start);
+        mBtnLocation = (FloatingActionButton) findViewById(R.id.btn_location);
+        fabAdd = (FloatingActionButton) findViewById(R.id.fab1);
+        fabDelete = (FloatingActionButton) findViewById(R.id.fab2);
+        fabEdit = (FloatingActionButton) findViewById(R.id.fab3);
+        fam = (FloatingActionMenu) findViewById(R.id.fab_menu);
+        setMenuPosition();
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
@@ -54,40 +69,53 @@ public class HUSTActivity extends FragmentActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
             .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mInfor.setOnClickListener(this);
+        mBtnLocation.setOnClickListener(this);
+        mBtnStart.setOnClickListener(this);
+        fam.setOnMenuToggleListener(this);
+        fabDelete.setOnClickListener(this);
+        fabEdit.setOnClickListener(this);
+        fabAdd.setOnClickListener(this);
+        fam.setOnClickListener(this);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    void setMenuPosition() {
+        RelativeLayout.LayoutParams lp_1 = new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams lp_2 = new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lp_1.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        lp_2.addRule(RelativeLayout.ALIGN_PARENT_END);
+        if (mInfor.getVisibility() == View.GONE) {
+            lp_1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            lp_2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            mBtnStart.setLayoutParams(lp_1);
+            mBtnLocation.setLayoutParams(lp_2);
+        } else {
+            lp_1.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            lp_1.addRule(RelativeLayout.ABOVE, mInfor.getId());
+            lp_2.addRule(RelativeLayout.ABOVE, mInfor.getId());
+            mBtnStart.setLayoutParams(lp_1);
+            mBtnLocation.setLayoutParams(lp_2);
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        //Initialize Google Play Services
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-                buildGoogleApiClient();
-                mMap.setMyLocationEnabled(true);
-            }
-        } else {
-            buildGoogleApiClient();
-            mMap.setMyLocationEnabled(true);
-        }
+        LatLng bachkhoa = new LatLng(21.004911, 105.844158);
         setupMap();
         mMap.setOnMarkerClickListener(this);
         mMap.setOnMapClickListener(this);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(bachkhoa));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
 
-    public void setupMap()
-    {
+    public void setupMap() {
         myMarker = mMap.addMarker(new MarkerOptions()
             .position(new LatLng(21.004886, 105.844284))
             .title("tree_1")
@@ -137,10 +165,16 @@ public class HUSTActivity extends FragmentActivity
         markerOptions
             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
-        //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
-        //stop location updates
+        double latitude = latLng.latitude;
+        double longitude = latLng.longitude;
+        if (latitude > 21.005958 ||
+            latitude < 21.004966 ||
+            longitude > 105.845287 ||
+            longitude < 105.841652) {
+            initDialog();
+        }
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
@@ -209,10 +243,10 @@ public class HUSTActivity extends FragmentActivity
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if (marker.getTitle().equals(myMarker.getTitle()))
-        {
+        if (marker.getTitle().equals(myMarker.getTitle())) {
             mInfor.setVisibility(View.VISIBLE);
             Toast.makeText(this, "hey hey hey", Toast.LENGTH_LONG).show();
+            setMenuPosition();
         }
         return true;
     }
@@ -220,6 +254,78 @@ public class HUSTActivity extends FragmentActivity
     @Override
     public void onMapClick(LatLng latLng) {
         mInfor.setVisibility(View.GONE);
-        Toast.makeText(this, "hey hey hey", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "hey hey hey", Toast.LENGTH_SHORT).show();
+        setMenuPosition();
+        if (fam.isOpened()) {
+            fam.close(true);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.treeInfor:
+                Intent myIntent = new Intent(this, TreeInformation.class);
+                this.startActivity(myIntent);
+                break;
+            case R.id.btn_location:
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                        buildGoogleApiClient();
+                        mMap.setMyLocationEnabled(true);
+                    }
+                } else {
+                    buildGoogleApiClient();
+                    mMap.setMyLocationEnabled(true);
+                }
+                break;
+            case R.id.fab_menu:
+                if (fam.isOpened()) {
+                    fam.close(true);
+                }
+                break;
+            case R.id.fab1:
+                showToast("Button Add clicked");
+                fam.close(true);
+                finish();
+                break;
+            case R.id.fab2:
+                showToast("Button delete clicked");
+                fam.close(true);
+                break;
+            case R.id.fab3:
+                showToast("Button edit clicked");
+                fam.close(true);
+                break;
+        }
+    }
+
+    void initDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Fuck you!")
+            .setMessage("You are not in the territory of HUST")
+            .setPositiveButton(android.R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
+    }
+
+    @Override
+    public void onMenuToggle(boolean opened) {
+        if (opened) {
+            showToast("Menu is opened");
+        } else {
+            showToast("Menu is closed");
+        }
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }
