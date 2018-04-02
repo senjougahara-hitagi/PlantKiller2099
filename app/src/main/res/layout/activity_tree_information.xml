@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="plantkiller.wayne.com.plantskiller2099.TreeInformation">
+    tools:context="plantkiller.wayne.com.plantskiller2099.ui.activity.TreeInformation">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"

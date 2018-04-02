@@ -12,7 +12,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              tools:context="plantkiller.wayne.com.plantskiller2099.HUSTActivity"/>
+              tools:context="plantkiller.wayne.com.plantskiller2099.ui.activity.HUSTActivity"/>
 
     <RelativeLayout
         android:id="@+id/treeInfor"

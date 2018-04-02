@@ -36,7 +36,7 @@
             android:value="@string/google_maps_key"/>
 
         <activity
-            android:name=".HUSTActivity"
+            android:name=".ui.activity.HUSTActivity"
             android:label="@string/title_activity_hust">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -45,9 +45,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TreeInformation"
+            android:name=".ui.activity.TreeInformation"
             android:label="@string/title_activity_tree_information"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".ui.activity.WateringActivity"
+            android:label="@string/title_activity_watering">
         </activity>
     </application>
 
