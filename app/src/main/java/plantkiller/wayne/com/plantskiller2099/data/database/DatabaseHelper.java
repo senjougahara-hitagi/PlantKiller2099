@@ -8,20 +8,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private final static String DB_NAME = "tree.db";
     private final static int DB_VERSION = 1;
     private final static String COMMAND_CREATE_TABLE =
-        "CREATE TABLE " + TreeDatabase.TreeEntry.TABLE_NAME
+        " CREATE TABLE " + TreeDatabase.TreeEntry.TABLE_NAME
             + "("
             + TreeDatabase.TreeEntry._ID
             + " INTEGER PRIMARY KEY NOT NULL, "
             + TreeDatabase.TreeEntry.COLUMN_NAME
             + " TEXT, "
-            + TreeDatabase.TreeEntry.COLUMN_LONG
-            + " DOUBLE,   "
-            + TreeDatabase.TreeEntry.COLUMN_LAT
-            + " DOUBLE, "
-            + TreeDatabase.TreeEntry.COLUMN_STATUS
+            + TreeDatabase.TreeEntry.COLUMN_ID
             + " INTEGER, "
             + TreeDatabase.TreeEntry.COLUMN_DES
-            + " TEXT) ";
+            + " TEXT, "
+            + TreeDatabase.TreeEntry.COLUMN_SIZE
+            + " INTEGER, "
+            + TreeDatabase.TreeEntry.COLUMN_STATUS
+            + " INTEGER, "
+            + TreeDatabase.TreeEntry.COLUMN_LAT
+            + " DOUBLE, "
+            + TreeDatabase.TreeEntry.COLUMN_LONG
+            + " DOUBLE) ";
     private final static String COMMAND_DELETE_TABLE =
         "DROP TABLE " + TreeDatabase.TreeEntry.COLUMN_NAME;
 

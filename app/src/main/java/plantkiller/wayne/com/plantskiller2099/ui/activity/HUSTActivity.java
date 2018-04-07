@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import plantkiller.wayne.com.plantskiller2099.R;
@@ -40,7 +41,7 @@ import plantkiller.wayne.com.plantskiller2099.data.model.TreeData;
 
 public class HUSTActivity extends FragmentActivity
     implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient
-    .OnConnectionFailedListener, LocationListener, GoogleMap.OnMarkerClickListener,
+    .OnConnectionFailedListener, LocationListener,
     GoogleMap.OnMapClickListener, View.OnClickListener, FloatingActionMenu.OnMenuToggleListener {
     private GoogleMap mMap;
     private Marker myMarker;
@@ -56,7 +57,7 @@ public class HUSTActivity extends FragmentActivity
     private FloatingActionButton fabEdit, fabDelete, fabAdd;
     private List<TreeData> mTree;
     private List<TreeData> mTreeData;
-    private List<Marker> mMarkerList;
+    ArrayList markerPoints = new ArrayList();
     private TreeDataSource mDatabase;
 
     @Override
@@ -125,7 +126,7 @@ public class HUSTActivity extends FragmentActivity
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         LatLng bachkhoa = new LatLng(21.004911, 105.844158);
         setupMap();
-        mMap.setOnMarkerClickListener(this);
+        //mMap.setOnMarkerClickListener(this);
         mMap.setOnMapClickListener(this);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(bachkhoa));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
@@ -134,38 +135,62 @@ public class HUSTActivity extends FragmentActivity
 
     public void setupMap() {
         /*status
-        1: choosing
+        1: DEAD
         2: normal
         3: dying
         4: need watering
          */
+        mTree = new ArrayList<>();
+        mDatabase = new TreeDataSource(getApplicationContext());
         int i = 0;
-        myMarker = mMap.addMarker(new MarkerOptions()
+/*
+       myMarker = mMap.addMarker(new MarkerOptions()
             .position(new LatLng(21.004886, 105.844284))
             .title("tree_1")
             .snippet("batman was here")
             .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
-        mTree.add(new TreeData("tree_0", 21.004886, 105.844284, 2, "this is Stark's tree"));
-        mTree.add(new TreeData("tree_1", 21.004876, 105.844274, 2, "this is Stark's tree"));
-        mTree.add(new TreeData("tree_2", 21.004866, 105.844264, 2, "this is Stark's tree"));
-        mTree.add(new TreeData("tree_3", 21.004856, 105.844254, 2, "this is Stark's tree"));
-        mTree.add(new TreeData("tree_4", 21.004846, 105.844244, 2, "this is Stark's tree"));
-        mTree.add(new TreeData("tree_5", 21.004836, 105.844234, 2, "this is Stark's tree"));
+       Marker myMarker_2 = mMap.addMarker(new MarkerOptions()
+            .position(new LatLng(58.500184, 83.189844))
+            .title("tree_2")
+            .snippet("superman was here")
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
+*/
+        mTree
+            .add(new TreeData(1, "tree_0", 21.004954, 105.844448, 1, 1, "this is " +
+                "Stark's tree"));
+        mTree.add(new TreeData(2, "tree_1", 21.004954, 105.843542, 2, 3, "this is " +
+            "Tony's tree"));
+        mTree.add(new TreeData(3, "tree_2", 21.005776, 105.841578, 3, 3, "this is " +
+            "Batman's tree"));
+        mTree.add(new TreeData(4, "tree_3", 21.006577, 105.845162, 4, 3, "this is " +
+            "Superman's tree"));
+        mTree.add(new TreeData(5, "tree_4", 21.005129, 105.845575, 1, 3, "this is " +
+            "Trump's tree"));
         for (i = 0; i < mTree.size(); i++) {
-            if (!mDatabase.isInDatabse(mTree.get(i).getTreeName()))
+            if (!mDatabase.isIndb(mTree.get(i).getId()))
                 mDatabase.insertTree(mTree.get(i));
         }
         mTreeData = mDatabase.getAllTree();
-        for (i=0;i<mTreeData.size();i++)
-        {
+        for (i = 0; i < mTreeData.size(); i++) {
             TreeData tree = mTreeData.get(i);
-            MarkerOptions markerOptions = new MarkerOptions()
-                .position(new LatLng(tree.getLat(), tree.getLong()))
+            LatLng latLng = new LatLng(tree.getLat(), tree.getLong());
+            markerPoints.add(latLng);
+            MarkerOptions options = new MarkerOptions();
+            options.position(latLng)
                 .title(tree.getTreeName())
-                .snippet(tree.getDes())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree));
-            mMarkerList.add(mMap.addMarker(markerOptions));
+                .snippet(tree.getDes());
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.tree));
+            if(tree.getStatus() == 2) options.icon(
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            else if(tree.getStatus() == 1) options.icon(
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            else if(tree.getStatus() == 3) options.icon(
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+            else if(tree.getStatus() == 4) options.icon(
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+            mMap.addMarker(options);
         }
+        Toast.makeText(this, String.valueOf(markerPoints.size()), Toast.LENGTH_SHORT).show();
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -214,25 +239,18 @@ public class HUSTActivity extends FragmentActivity
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
         double latitude = latLng.latitude;
         double longitude = latLng.longitude;
-        if(!isInBk(latitude,longitude)) initDialog();
-       /* if (latitude > 21.005958 ||
-            latitude < 21.004966 ||
-            longitude > 105.845287 ||
-            longitude < 105.841652) {
-            initDialog();
-        }*/
+        if (!isInBk(latitude, longitude)) initDialog();
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
 
-    public boolean isInBk(double latitude, double longitude)
-    {
+    public boolean isInBk(double latitude, double longitude) {
         if (latitude > 21.005958 ||
             latitude < 21.004966 ||
             longitude > 105.845287 ||
             longitude < 105.841652)
-        return false;
+            return false;
         else return true;
     }
 
@@ -297,7 +315,7 @@ public class HUSTActivity extends FragmentActivity
         }
     }
 
-    @Override
+    /*@Override
     public boolean onMarkerClick(final Marker marker) {
         if (marker.getTitle().equals(myMarker.getTitle())) {
             mInfor.setVisibility(View.VISIBLE);
@@ -305,7 +323,7 @@ public class HUSTActivity extends FragmentActivity
             setMenuPosition();
         }
         return true;
-    }
+    }*/
 
     @Override
     public void onMapClick(LatLng latLng) {
@@ -364,7 +382,7 @@ public class HUSTActivity extends FragmentActivity
 
     void initDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Fuck you!")
+        builder.setTitle("Sorry!")
             .setMessage("You are not in the territory of HUST")
             .setPositiveButton(android.R.string.yes,
                 new DialogInterface.OnClickListener() {
