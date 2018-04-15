@@ -15,6 +15,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_PROFILE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -38,6 +43,19 @@
         <activity
             android:name=".ui.activity.HUSTActivity"
             android:label="@string/title_activity_hust">
+        </activity>
+        <activity
+            android:name=".ui.activity.TreeInformation"
+            android:label="@string/title_activity_tree_information"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".ui.activity.ProfileActivity">
+        </activity>
+        <activity android:name=".ui.activity.HistoryActivity">
+        </activity>
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -45,13 +63,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.TreeInformation"
-            android:label="@string/title_activity_tree_information"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".ui.activity.SampleMap"
+            android:label="@string/title_activity_sample_map">
         </activity>
-        <activity
-            android:name=".ui.activity.WateringActivity"
-            android:label="@string/title_activity_watering">
+        <activity android:name=".ui.activity.UpdateTree">
         </activity>
     </application>
 

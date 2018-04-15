@@ -13,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -148,7 +149,11 @@ public class WateringActivity extends FragmentActivity implements OnMapReadyCall
                 markerPoints.add(latLng);
             }
         }
+
         for (i = 0; i < markerPoints.size() - 1; i++) {
+            double z = markerPoints.get(i).latitude;
+            double y = markerPoints.get(i).longitude;
+
             LatLng origin = (LatLng) markerPoints.get(i);
             LatLng dest = (LatLng) markerPoints.get(i + 1);
             String url = getDirectionsUrl(origin, dest);
@@ -207,11 +212,9 @@ public class WateringActivity extends FragmentActivity implements OnMapReadyCall
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
             ArrayList<LatLng> points = new ArrayList<>();
-            ;
             PolylineOptions lineOptions = new PolylineOptions();
-            ;
             lineOptions.width(2);
-            lineOptions.color(Color.RED);
+            //lineOptions.color();
             // Traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
                 lineOptions = new PolylineOptions();

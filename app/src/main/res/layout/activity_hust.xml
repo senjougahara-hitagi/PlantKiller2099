@@ -7,60 +7,23 @@
     android:layout_height="match_parent">
 
     <fragment android:id="@+id/map"
-              android:name="com.google.android.gms.maps.SupportMapFragment"
+              android:name="com.appolica.interactiveinfowindow.fragment.MapInfoWindowFragment"
               xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               tools:context="plantkiller.wayne.com.plantskiller2099.ui.activity.HUSTActivity"/>
 
-    <RelativeLayout
-        android:id="@+id/treeInfor"
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/btn_watering"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        android:visibility="gone"
-        >
-
-        <ImageView
-            android:id="@+id/list_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_launcher_background"/>
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/list_image"
-            android:text="tri dep trai"
-            android:textColor="#040404"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:typeface="sans"/>
-
-        <TextView
-            android:id="@+id/location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title"
-            android:layout_marginTop="1dp"
-            android:layout_toRightOf="@id/list_image"
-            android:text="tri deo trai x3"
-            android:textColor="#343434"
-            android:textSize="10dip"
-            />
-
-    </RelativeLayout>
-
-    <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/btn_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_margin="@dimen/dp_6"
+        android:src="@drawable/ic_power"
         app:borderWidth="@dimen/dp_0"
         app:elevation="@dimen/dp_6"
         app:fabSize="normal"
@@ -68,9 +31,63 @@
         app:rippleColor="@android:color/black"/>
 
     <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dp_6"
+        android:src="@drawable/ic_play_button"
+        android:visibility="gone"
+        app:borderWidth="@dimen/dp_0"
+        app:elevation="@dimen/dp_6"
+        app:fabSize="normal"
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="@android:color/black"/>
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dp_6"
+        android:src="@drawable/ic_cancel"
+        android:visibility="gone"
+        app:borderWidth="@dimen/dp_0"
+        app:elevation="@dimen/dp_6"
+        app:fabSize="normal"
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="@android:color/black"/>
+
+    <ImageView
+        android:id="@+id/image_batman"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="80dp"
+        android:layout_margin="@dimen/dp_5"
+        android:scaleType="centerCrop"
+        android:src="@drawable/batman"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/text_batman"
+        android:layout_width="@dimen/dp_160"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_5"
+        android:layout_below="@id/image_batman"
+        android:scaleType="centerCrop"
+        android:src="@drawable/batman"
+        android:text="Select trees to irrigate, then click start"
+        android:visibility="gone"/>
+
+    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/btn_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_gravity="center"
         android:layout_margin="@dimen/dp_6"
         android:src="@drawable/ic_target"
@@ -86,7 +103,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        app:menu_fab_label="batman"
         app:menu_openDirection="down"
         fab:fab_colorNormal="#DA4336"
         fab:fab_colorPressed="#E75043"
@@ -101,13 +117,13 @@
         fab:menu_labels_maxLines="2"
         fab:menu_labels_position="left"
         fab:menu_labels_showShadow="true"
-        fab:menu_labels_singleLine="true">
+        >
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_edit"
+            android:src="@drawable/ic_exit"
             app:fab_label="exit"
             fab:fab_size="mini"/>
 
@@ -115,7 +131,7 @@
             android:id="@+id/fab2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_add"
+            android:src="@drawable/ic_history"
             app:fab_label="History"
             fab:fab_size="mini"/>
 
@@ -123,13 +139,11 @@
             android:id="@+id/fab3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_delete"
+            android:src="@drawable/ic_man_user"
             app:fab_label="Profile"
             fab:fab_size="mini"/>
 
     </com.github.clans.fab.FloatingActionMenu>
-
-
 </RelativeLayout>
 
 

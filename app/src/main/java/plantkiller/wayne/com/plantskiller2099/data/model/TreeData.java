@@ -1,10 +1,12 @@
 package plantkiller.wayne.com.plantskiller2099.data.model;
 
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import plantkiller.wayne.com.plantskiller2099.data.database.TreeDatabase;
 
-public class TreeData {
+public class TreeData implements Parcelable{
     private int mId;
     private String mTreeName;
     private double mLong;
@@ -14,6 +16,15 @@ public class TreeData {
     private int mSize;
     private String mDes;
     private int mDbId;
+    /*thêm lượng nước.
+    * tần suát tưới.
+    * private list<history> mHistory
+    *       ngày tưới
+    *       người tưới
+    *       stt
+    *
+    * */
+
 
     public TreeData(int id, String treeName, double lat, double aLong, int status,
                     int size, String des) {
@@ -39,6 +50,29 @@ public class TreeData {
         this.mDbId = cursor.getInt(cursor.getColumnIndex(TreeDatabase.TreeEntry._ID));
     }
 
+    protected TreeData(Parcel in) {
+        mId = in.readInt();
+        mTreeName = in.readString();
+        mLong = in.readDouble();
+        mLat = in.readDouble();
+        mStatus = in.readInt();
+        mChoosen = in.readByte() != 0;
+        mSize = in.readInt();
+        mDes = in.readString();
+        mDbId = in.readInt();
+    }
+
+    public static final Creator<TreeData> CREATOR = new Creator<TreeData>() {
+        @Override
+        public TreeData createFromParcel(Parcel in) {
+            return new TreeData(in);
+        }
+
+        @Override
+        public TreeData[] newArray(int size) {
+            return new TreeData[size];
+        }
+    };
 
     public int getId() {
         return mId;
@@ -106,4 +140,21 @@ public class TreeData {
         mDes = des;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mTreeName);
+        dest.writeDouble(mLong);
+        dest.writeDouble(mLat);
+        dest.writeInt(mStatus);
+        dest.writeByte((byte) (mChoosen ? 1 : 0));
+        dest.writeInt(mSize);
+        dest.writeString(mDes);
+        dest.writeInt(mDbId);
+    }
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/relative"><ImageView
+        android:layout_width="@dimen/dp_90"
+        android:layout_height="@dimen/dp_90"
+        android:src="@drawable/tree"
+        android:layout_margin="@dimen/dp_5"
+        android:id="@+id/image_treeAva"/>
+
+        <TextView
+            android:id="@+id/text_treeName"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_45"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/image_treeAva"
+            android:text="tri dep trai"
+            android:textColor="#040404"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:typeface="sans"/>
+
+        <TextView
+            android:id="@+id/text_treeDes"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_45"
+            android:layout_below="@id/text_treeName"
+            android:layout_marginTop="1dp"
+            android:layout_toRightOf="@id/image_treeAva"
+            android:text="tri deo trai x3"
+            android:textColor="#343434"
+            android:textSize="10dip"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:src="@drawable/batman"
+        android:scaleType="centerCrop"
+        android:layout_margin="@dimen/dp_5"
+        android:id="@+id/btn_tree_infor"
+        android:layout_toRightOf="@id/relative"/>
+    <ImageView
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:src="@drawable/batman"
+        android:scaleType="centerCrop"
+        android:layout_margin="@dimen/dp_5"
+        android:id="@+id/btn_tree_change"
+        android:layout_below="@id/btn_tree_infor"
+        android:layout_toRightOf="@id/relative"/>
+</RelativeLayout>
