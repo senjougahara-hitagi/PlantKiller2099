@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import plantkiller.wayne.com.plantskiller2099.DirectionsJSONParser;
 import plantkiller.wayne.com.plantskiller2099.R;
 import plantkiller.wayne.com.plantskiller2099.data.database.TreeDataSource;
 import plantkiller.wayne.com.plantskiller2099.data.model.TreeData;

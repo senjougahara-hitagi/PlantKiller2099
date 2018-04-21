@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -20,6 +21,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,12 +89,15 @@ public class HUSTActivity extends FragmentActivity
     private TreeData mResult;
     private InfoWindowManager infoWindowManager;
     private Boolean isStarted = false;
+    private Boolean isStartWatering = false;
     private int i;
     Marker mWater_1;
     Marker mWater_2;
     Marker mWater_3;
     Marker mWater_4;
     Marker mWater_5;
+    RelativeLayout mRelativeLayout;
+    ProgressBar mProgressBlue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +120,7 @@ public class HUSTActivity extends FragmentActivity
         mDatabase = new TreeDataSource(getApplicationContext());
         addTree();
         setDb();
+        mMyLocation = getLastKnownLocation();
     }
 
     private void initView() {
@@ -127,6 +134,10 @@ public class HUSTActivity extends FragmentActivity
         mBtnStop = findViewById(R.id.btn_cancel);
         mImage = findViewById(R.id.image_batman);
         mText = findViewById(R.id.text_batman);
+        mRelativeLayout = findViewById(R.id.relative_water);
+        mProgressBlue = findViewById(R.id.progressBlue);
+        mProgressBlue.getProgressDrawable().setColorFilter(
+            Color.BLUE, android.graphics.PorterDuff.Mode.SRC_IN);
     }
 
     public void setButton() {
@@ -198,7 +209,7 @@ public class HUSTActivity extends FragmentActivity
     }
 
     public void setupMap() {
-        getCurrLocation();
+        //getCurrLocation();
         mMap.addMarker(new MarkerOptions().position(new LatLng(mMyLocation.getLatitude(),
             mMyLocation.getLongitude())).title("MyLocation"));
         for (i = 0; i < mTreeData.size(); i++) {
@@ -252,20 +263,23 @@ public class HUSTActivity extends FragmentActivity
         }
     }
 
-    private void getCurrLocation() {
-        mMyLocation = null;
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria crit = new Criteria();
-        crit.setAccuracy(Criteria.ACCURACY_FINE);
-        String provider = lm.getBestProvider(crit, true);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-            PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            return;
+    private LocationManager mLocationManager;
+
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
         }
-        mMyLocation = lm.getLastKnownLocation(provider);
+        return bestLocation;
     }
 
     public boolean isInBk(double latitude, double longitude) {
@@ -351,6 +365,7 @@ public class HUSTActivity extends FragmentActivity
                 mResult = tree;
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("key", mResult);
+                bundle.putBoolean("isStarted", isStartWatering);
                 FormFragment formFragment = new FormFragment();
                 formFragment.setArguments(bundle);
                 infoWindow = new InfoWindow(marker, markerSpec, formFragment);
@@ -409,7 +424,7 @@ public class HUSTActivity extends FragmentActivity
                 }
                 mMap.setMyLocationEnabled(true);
                 if (mCurrLocationMarker != null) mCurrLocationMarker.remove();
-                getCurrLocation();
+                //getCurrLocation();
                 LatLng latLng =
                     new LatLng(mMyLocation.getLatitude(), mMyLocation.getLongitude());
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -456,6 +471,7 @@ public class HUSTActivity extends FragmentActivity
                                     mImage.setVisibility(View.VISIBLE);
                                     mText.setVisibility(View.VISIBLE);
                                     mBtnStart.setVisibility(View.VISIBLE);
+                                    mRelativeLayout.setVisibility(View.VISIBLE);
                                 }
                             })
                         .setNegativeButton(android.R.string.no,
@@ -476,6 +492,7 @@ public class HUSTActivity extends FragmentActivity
                     .setPositiveButton(android.R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                isStartWatering = true;
                                 mMap.clear();
                                 for (i = mTreeData.size() - 1; i >= 0; i--) {
                                     if (!mTreeData.get(i).isChoosen())
@@ -517,10 +534,12 @@ public class HUSTActivity extends FragmentActivity
                                 setupMap();
                                 setWaterSpot();
                                 isStarted = false;
+                                isStartWatering = false;
                                 mBtnStop.setVisibility(View.GONE);
                                 mBtnWatering.setVisibility(View.VISIBLE);
                                 mImage.setVisibility(View.GONE);
                                 mText.setVisibility(View.GONE);
+                                mRelativeLayout.setVisibility(View.VISIBLE);
                             }
                         })
                     .setNegativeButton(android.R.string.no,
@@ -536,7 +555,7 @@ public class HUSTActivity extends FragmentActivity
                 if (fam.isOpened()) {
                     fam.close(true);
                 }
-                getCurrLocation();
+                //getCurrLocation();
                 break;
             case R.id.fab1:
                 fam.close(true);
@@ -568,7 +587,7 @@ public class HUSTActivity extends FragmentActivity
 
     void getDirection() {
         mMarkerPoints.clear();
-        getCurrLocation();
+        //getCurrLocation();
         mMarkerPoints.add(new LatLng(mMyLocation.getLatitude(), mMyLocation.getLongitude()));
         mMarkerPoints.add(new LatLng(mWater_1.getPosition().latitude, mWater_1.getPosition()
             .longitude));
@@ -643,6 +662,7 @@ public class HUSTActivity extends FragmentActivity
             ArrayList<LatLng> points = new ArrayList<>();
             PolylineOptions lineOptions = new PolylineOptions();
             lineOptions.width(2);
+            lineOptions.color(Color.BLUE);
             // Traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
                 lineOptions = new PolylineOptions();

@@ -14,6 +14,30 @@
               android:layout_height="match_parent"
               tools:context="plantkiller.wayne.com.plantskiller2099.ui.activity.HUSTActivity"/>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_location"
+        android:id="@+id/relative_water"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_25"
+            android:src="@drawable/ic_cancel"
+            android:layout_margin="@dimen/dp_5"
+            android:id="@+id/image_waterIcon"/>
+        <ProgressBar
+            android:id="@+id/progressBlue"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:layout_margin="@dimen/dp_5"
+            android:drawingCacheQuality="high"
+            android:progress="50"
+            android:layout_toRightOf="@id/image_waterIcon"
+            />
+    </RelativeLayout>
 
     <com.github.clans.fab.FloatingActionButton
         android:id="@+id/btn_watering"
@@ -75,8 +99,8 @@
         android:id="@+id/text_batman"
         android:layout_width="@dimen/dp_160"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_5"
         android:layout_below="@id/image_batman"
+        android:layout_margin="@dimen/dp_5"
         android:scaleType="centerCrop"
         android:src="@drawable/batman"
         android:text="Select trees to irrigate, then click start"

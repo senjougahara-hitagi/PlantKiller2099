@@ -2,15 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+
     <RelativeLayout
+        android:id="@+id/relative"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/relative"><ImageView
-        android:layout_width="@dimen/dp_90"
-        android:layout_height="@dimen/dp_90"
-        android:src="@drawable/tree"
-        android:layout_margin="@dimen/dp_5"
-        android:id="@+id/image_treeAva"/>
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image_treeAva"
+            android:layout_width="@dimen/dp_90"
+            android:layout_height="@dimen/dp_90"
+            android:layout_margin="@dimen/dp_5"
+            android:src="@drawable/tree"/>
 
         <TextView
             android:id="@+id/text_treeName"
@@ -37,20 +40,59 @@
     </RelativeLayout>
 
     <ImageView
-        android:layout_width="@dimen/dp_40"
-        android:layout_height="@dimen/dp_40"
-        android:src="@drawable/batman"
-        android:scaleType="centerCrop"
-        android:layout_margin="@dimen/dp_5"
         android:id="@+id/btn_tree_infor"
-        android:layout_toRightOf="@id/relative"/>
-    <ImageView
         android:layout_width="@dimen/dp_40"
         android:layout_height="@dimen/dp_40"
-        android:src="@drawable/batman"
-        android:scaleType="centerCrop"
         android:layout_margin="@dimen/dp_5"
+        android:layout_toRightOf="@id/relative"
+        android:scaleType="centerCrop"
+        android:src="@drawable/batman"/>
+
+    <ImageView
         android:id="@+id/btn_tree_change"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
         android:layout_below="@id/btn_tree_infor"
-        android:layout_toRightOf="@id/relative"/>
+        android:layout_margin="@dimen/dp_5"
+        android:layout_toRightOf="@id/relative"
+        android:scaleType="centerCrop"
+        android:src="@drawable/batman"/>
+
+    <RelativeLayout
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relative"
+        android:id="@+id/relative_custom"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_25"
+            android:src="@drawable/ic_cancel"
+            android:layout_margin="@dimen/dp_5"
+            android:id="@+id/image_waterIcon"/>
+        <ProgressBar
+            android:id="@+id/progressRed"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:layout_margin="@dimen/dp_5"
+            android:layout_toRightOf="@id/image_waterIcon"
+            android:drawingCacheQuality="high"
+            android:progress="50"
+            android:max="100"
+            android:min="0"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progressRed"
+            android:text="Water"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/dp_5"
+            android:id="@+id/btn_water"
+            />
+    </RelativeLayout>
 </RelativeLayout>
