@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PlantKiller2099.iml" filepath="$PROJECT_DIR$/PlantKiller2099.iml" />
+      <module fileurl="file://C:\Users\Admin\Desktop\PlantKiller2099\PlantsKiller2099.iml" filepath="C:\Users\Admin\Desktop\PlantKiller2099\PlantsKiller2099.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
